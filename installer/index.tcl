@@ -192,10 +192,10 @@ After adding support for the fancy ADP parser, please restart your web server.
 # in the install.xml file)
 
 set stacksize [ns_config "ns/threads" StackSize]
-if { $stacksize < [expr $acs_application(min_stack_size) * 1024] } {
 
-    append errors "<li><p>The configured AOLserver Stacksize is too small
-([expr $stacksize / 1024]K).
+if { ![string is integer $stacksize] ||
+     $stacksize < [expr $acs_application(min_stack_size) * 1024] } {
+    append errors "<li><p><strong>The configured AOLserver Stacksize is too small, missing, or a non-integer value.
 $acs_application(pretty_name) requires a StackSize parameter of at least
 ${acs_application(min_stack_size)}K.
 <p>Please add the following line to your .tcl configuration file
@@ -289,16 +289,6 @@ We'll need to create a site-wide administrator for your server (like the root
 user in UNIX). Please type in the email address, first and last name, and password
 for this user.
 
-<p>
-<font color=red>Please do not use any non-ASCII characters
-(accented characters, Umlaut, Asian etc...)
-in the fields below. This will break the installation process.
-</font>
-<br>
-This restriction is only for the screen below. You can modify
-the name of the system administrator later.
-</p>
-
 <script language=\"javascript\">
 function updateSystemEmails() {
     var form = document.forms\[0\];
@@ -311,7 +301,7 @@ function updateSystemEmails() {
 }
 </script>
 
-<form action=\"installer/install\">
+<form action=\"installer/install\" method=\"POST\">
 
 <table>
 <tr>
