@@ -420,7 +420,12 @@ ad_proc -public db_qd_fetch {fullquery_name {rdbms {}}} {
 
 ad_proc -public db_qd_replace_sql {statement_name sql} {
     @return sql for statement_name (defaulting to sql if not found)
-} { 
+} {
+    # Fraber 20120907: Write out a line with the DB statment for every
+    # query made. This way we can determine the test coverage for 
+    # semiautomatic testing
+    db_qd_log Debug "db_qd_replace_sql: $statement_name"
+
     set fullquery [db_qd_fetch $statement_name]
 
     if {$fullquery ne ""} {
