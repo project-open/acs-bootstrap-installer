@@ -7,11 +7,35 @@
 #
 # $Id$
 
-# handling NaviServer deprecated ns_info subcommands. 
 namespace eval acs {
-    set ::acs::pageroot [expr {[catch {ns_server pagedir}] ? [ns_info pageroot] : [ns_server pagedir]}]
-    set ::acs::tcllib [expr {[catch {ns_server tcllib}] ? [ns_info tcllib] : [ns_server tcllib]}]
-    set ::acs::rootdir [file dirname [string trimright $::acs::tcllib "/"]]
+    #
+    # Determine, under which server we are running
+    #
+    set ::acs::useNaviServer [expr {[ns_info name] eq "NaviServer"}]
+
+    #
+    # Initialize the list of known database types .  User code should use the database
+    # API routine db_known_database_types rather than reference the nsv list directly.
+    # We might change the way this is implemented later.  Each database type is
+    # represented by a list consisting of the internal name, driver name, and
+    # "pretty name" (used by the APM to list the available database engines that 
+    # one's package can choose to support).  The driver name and "pretty name" happen
+    # to be the same for Postgres and Oracle but let's not depend on that being true
+    # in all cases...
+    #
+
+    set ::acs::known_database_types {
+        {oracle Oracle Oracle}
+        {postgresql PostgreSQL PostgreSQL}
+    }
+
+    #
+    # Enable / disable features depending on availability
+    #
+    set ::acs::pageroot [expr {$::acs::useNaviServer ? [ns_server pagedir] : [ns_info pageroot]}]
+    set ::acs::tcllib   [expr {$::acs::useNaviServer ? [ns_server tcllib] : [ns_info tcllib]}]
+    set ::acs::rootdir  [file dirname [string trimright $::acs::tcllib "/"]]
+    set ::acs::useNsfProc [expr {[info commands ::nsf::proc] ne ""}]
 }
 
 # Determine the OpenACS root directory, which is the directory right above the
@@ -49,3 +73,9 @@ if { [file isfile $bootstrap_file] } {
 } else {
     ns_log "Error" "$bootstrap_file does not exist. Aborting the OpenACS load process."
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

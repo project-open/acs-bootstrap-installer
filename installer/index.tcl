@@ -53,7 +53,7 @@ a suite of fully-integrated enterprise-class solutions
 for collaborative commerce.
 This is the OpenACS Installer which performs all the steps necessary
 to get the OpenACS Community System running on your server.<p>
-Please read the <a href=\"/doc/release-notes.html\">Release Notes</a> 
+Please read the <a href=\"/doc/release-notes\">Release Notes</a> 
 before proceeding to better understand what is contained in this release.
 
 "
@@ -111,6 +111,11 @@ Once you're sure everything is installed and configured correctly, restart AOLse
     install_return 200 "Error" $body
     return
 } 
+
+#
+# Unset array errors, in case it exists
+#
+if {[array exists errors]} {array unset errors}
 
 # Perform database-specific checks
 db_installer_checks errors error_p
@@ -195,8 +200,8 @@ the user executing the web server, normally <code>nsadmin</code>, and the owner 
 on this directory.  You can correct this by running the following script as root.
 To give another user access to the files, add them to <code>web</code> group.
 <blockquote><pre>
-groupadd web
-chown -R nsadmin:web $::acs::rootdir
+groupadd nsadmin
+chown -R nsadmin:nsadmin $::acs::rootdir
 chmod -R ug+rw $::acs::rootdir
 </pre></blockquote>
 </strong></p>"
@@ -211,8 +216,8 @@ if { ![file writable [file join $::acs::rootdir packages]] } {
     script as root.
     To give another user access to the files, add them to <code>web</code> group.
     <blockquote><pre>
-groupadd web
-chown -R nsadmin:web $::acs::rootdir/packages
+groupadd nsadmin
+chown -R nsadmin:nsadmin $::acs::rootdir/packages
 chmod -R ug+rw $::acs::rootdir/packages
     </pre></blockquote></strong></p>"
     set error_p 1
@@ -388,3 +393,9 @@ The email address to send New registration notifications.<br><br>
 }
 
 install_return 200 "Welcome" $body
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

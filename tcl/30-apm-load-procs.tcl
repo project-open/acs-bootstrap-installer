@@ -322,7 +322,7 @@ ad_proc -private apm_guess_db_type { package_key path } {
             if {$db_dir eq "common"} {
                 return ""
             }
-            foreach known_database_type [db_known_database_types] {
+            foreach known_database_type $::acs::known_database_types {
                 if {[lindex $known_database_type 0] eq $db_dir} {
                     return $db_dir
                 }
@@ -332,7 +332,7 @@ ad_proc -private apm_guess_db_type { package_key path } {
     }
 
     set file_name [file tail $path]
-    foreach known_database_type [nsv_get ad_known_database_types .] {
+    foreach known_database_type $::acs::known_database_types {
         if { [regexp -- "\-[lindex $known_database_type 0]\.(xql|tcl|sqlj)\$" $file_name match] } {
             return [lindex $known_database_type 0]
         }
@@ -602,7 +602,7 @@ ad_proc apm_bootstrap_upgrade {
     acs-bootstrap-installer package (rather than a full tar file
     install as in eralier versions). 
 
-    Caveat: don't modify these files in your local installation, addin
+    Caveat: don't modify these files in your local installation, adding
     extra files to $::acs::rootdir/tcl is fine.
 } {
     set source $::acs::rootdir/packages/acs-bootstrap-installer/installer/tcl
