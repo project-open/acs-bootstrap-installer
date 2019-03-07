@@ -144,7 +144,7 @@ set errno [catch {
 
     # LARS: Load packages/acs-automated-testing/tcl/aa-test-procs.tcl
     ns_log Notice "Loading acs-automated-testing specially so other packages can define tests..."
-    apm_bootstrap_load_libraries -procs acs-automated-testing
+#    apm_bootstrap_load_libraries -procs acs-automated-testing
 
     # Package libraries are now loaded in dependency order, rather than
     # alphabetically.  This code is obsolete and has been commented out
