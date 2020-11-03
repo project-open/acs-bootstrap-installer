@@ -36,8 +36,8 @@ proc db_bootstrap_checks { errors error_p } {
     }
 
     if { $version < 9.0 } {
-        append my_errors "<li>WARNING: Your installed version of Postgres is too old.  Please install PostgreSQL 9.0 or later.\n"
-#        set my_error_p 1
+        append my_errors "<li>Your installed version of Postgres is too old.  Please install PostgreSQL 9.0 or later.\n"
+        set my_error_p 1
     }
 
     if { [catch { ns_pg_bind 1row $db "select count(*) from pg_class" }] } {
